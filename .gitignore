@@ -1,0 +1,14 @@
+# QP-nano source directories.
+/qp-nano
+
+# Intermediate output files.
+/rdoorbell0.map
+/rdoorbell0.elf
+/rdoorbell0.bin
+/*.d
+/*.o
+
+# Program file.
+/rdoorbell0.hex
+
+/doc
