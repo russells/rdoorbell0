@@ -1,0 +1,4 @@
+A simplified doorbell.
+
+The original project grew like Topsy, and lost sight of its mission.  This one
+is intended to remain simple, and only implement the delayed doorbell.
