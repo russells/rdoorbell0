@@ -6,6 +6,6 @@ Pin assignments for ATtiny85/V
 4	GND
 5	PB0,OC0A
 6	PB1,OC0B
-7	PB2
+7	PB2		Button
 8	VCC
 

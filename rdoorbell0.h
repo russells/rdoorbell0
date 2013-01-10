@@ -11,7 +11,11 @@ enum RDoorbell0Signals {
 	 * Sent for timing, and so we can confirm that the event loop is
 	 * running.
 	 */
-	WATCHDOG_SIGNAL,
+	WATCHDOG_SIGNAL = Q_USER_SIG,
+	/**
+	 * Sent when the button is pressed.
+	 */
+	BUTTON_SIGNAL,
 	MAX_PUB_SIG,
 	MAX_SIG,
 };
@@ -26,7 +30,7 @@ struct RDoorbell0Event {
 
 
 /**
- * Create the lap clock.
+ * Create the doorbell.
  */
 void rdoorbell0_ctor(void);
 
@@ -37,6 +41,13 @@ struct RDoorbell0 {
 	QActive super;
 	int presses;
 };
+
+
+extern struct RDoorbell0 rdoorbell0;
+
+
+/** Normal alarm wait period. */
+#define POLITE_PAUSE (15 * BSP_TICKS_PER_SECOND)
 
 
 /**
