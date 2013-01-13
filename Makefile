@@ -34,7 +34,7 @@ CFLAGS  = -c -gdwarf-2 -std=gnu99 -Os -fsigned-char -fshort-enums \
 	-I$(QPN_INCDIR) -I.
 LINKFLAGS = -gdwarf-2 -Os -mmcu=$(TARGET_MCU)
 
-SRCS = rdoorbell0.c bsp-avr.c qepn.c qfn.c
+SRCS = rdoorbell0.c bsp-avr.c qepn.c qfn.c morse.c
 
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
