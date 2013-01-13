@@ -1,11 +1,11 @@
 Pin assignments for ATtiny85/V
 
 1	RESET
-2	PB3
-3	PB4,OC1B
+2	PB3		Internal bell, active high
+3	PB4,OC1B	Power relay, active high
 4	GND
-5	PB0,OC0A
-6	PB1,OC0B
-7	PB2		Button
+5	PB0,OC0A	Front door LED, active low
+6	PB1,OC0B	Front door piezo, active high (PWM)
+7	PB2		Button, active low (with pullup resistor)
 8	VCC
 
