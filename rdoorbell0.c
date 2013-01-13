@@ -18,6 +18,7 @@ static QState rdoorbell0State          (struct RDoorbell0 *me);
 static QState waitingState             (struct RDoorbell0 *me);
 static QState ringState                (struct RDoorbell0 *me);
 static QState politePauseState         (struct RDoorbell0 *me);
+static QState buzzerState              (struct RDoorbell0 *me);
 
 
 static QEvent rdoorbell0Queue[4];
@@ -77,8 +78,14 @@ static QState rdoorbell0State(struct RDoorbell0 *me)
 static QState waitingState(struct RDoorbell0 *me)
 {
 	switch (Q_SIG(me)) {
+	case Q_ENTRY_SIG:
+		BSP_LED(1);
+		return Q_HANDLED();
 	case BUTTON_SIGNAL:
 		return Q_TRAN(ringState);
+	case Q_EXIT_SIG:
+		BSP_LED(0);
+		return Q_HANDLED();
 	}
 	return Q_SUPER(rdoorbell0State);
 }
@@ -115,13 +122,29 @@ static QState politePauseState(struct RDoorbell0 *me)
 		QActive_arm((QActive*)me, POLITE_PAUSE);
 		return Q_HANDLED();
 	case BUTTON_SIGNAL:
-		/* Pressing the button results in a re-transition back to this
-		   state, meaning exit and re-enter, so the timer gets reset
-		   and armed again. */
-		return Q_TRAN(politePauseState);
+		return Q_TRAN(buzzerState);
 	case Q_TIMEOUT_SIG:
 		QActive_disarm((QActive*)me);
 		return Q_TRAN(waitingState);
+	}
+	return Q_SUPER(rdoorbell0State);
+}
+
+
+static QState buzzerState(struct RDoorbell0 *me)
+{
+	switch (Q_SIG(me)) {
+	case Q_ENTRY_SIG:
+		QActive_arm((QActive*)me, 5);
+		BSP_buzzer(1);
+		return Q_HANDLED();
+	case BUTTON_SIGNAL:
+		return Q_HANDLED();
+	case Q_TIMEOUT_SIG:
+		return Q_TRAN(politePauseState);
+	case Q_EXIT_SIG:
+		BSP_buzzer(0);
+		return Q_HANDLED();
 	}
 	return Q_SUPER(rdoorbell0State);
 }

@@ -4,6 +4,10 @@
 #include <avr/wdt.h>
 
 
+#define SB(port,bit) port |= (1 << bit)
+#define CB(port,bit) port &= ~ (1 << bit)
+
+
 void BSP_onStartup(void)
 {
 	/* Must match BSP_TICKS_PER_SECOND */
@@ -60,6 +64,58 @@ void BSP_init(void)
 {
 	wdt_disable();
 	wdt_reset();
+	cli();
+	DDRB =  (1 << 4) |	/* Power relay. */
+		(1 << 3) |	/* Internal bell. */
+		(0 << 2) |	/* Button. */
+		(1 << 1) |	/* Piezo. */
+		(1 << 0);	/* LED. */
+	PORTB = (1 << 4) |	/* Power relay on. */
+		(0 << 3) |	/* Internal bell off. */
+		(1 << 2) |	/* Button, pull up on. */
+		(0 << 1) |	/* Piezo off. */
+		(0 << 0);	/* LED off. */
+	sei();
+}
+
+
+void BSP_LED(uint8_t onoff)
+{
+	if (onoff) {
+		SB(PORTB, 0);
+	} else {
+		CB(PORTB, 0);
+	}
+}
+
+
+void BSP_alarm(uint8_t onoff)
+{
+	if (onoff) {
+		SB(PORTB, 3);
+	} else {
+		CB(PORTB, 3);
+	}
+}
+
+
+void BSP_power(uint8_t onoff)
+{
+	if (onoff) {
+		SB(PORTB, 4);
+	} else {
+		CB(PORTB, 4);
+	}
+}
+
+
+void BSP_buzzer(uint8_t onoff)
+{
+	if (onoff) {
+		SB(PORTB, 1);
+	} else {
+		CB(PORTB, 1);
+	}
 }
 
 
@@ -67,10 +123,4 @@ SIGNAL(WDT_vect)
 {
 	QActive_postISR((QActive*)(&rdoorbell0), WATCHDOG_SIGNAL);
 	QF_tick();
-}
-
-
-void BSP_alarm(uint8_t onoff)
-{
-
 }
