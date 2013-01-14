@@ -125,3 +125,29 @@ SIGNAL(WDT_vect)
 	QActive_postISR((QActive*)(&rdoorbell0), WATCHDOG_SIGNAL);
 	QF_tick();
 }
+
+
+void BSP_stop_everything(void)
+{
+	cli();
+	wdt_reset();
+	wdt_disable();
+	PORTB = (1 << 4) |
+		(0 << 3) |
+		(0 << 2) |
+		(0 << 1) |
+		(0 << 0);
+}
+
+
+void BSP_enable_morse_line(void)
+{
+	SB(DDRB, 0);
+	CB(PORTB, 0);
+}
+
+
+void BSP_morse_signal(uint8_t onoff)
+{
+	BSP_LED(onoff);
+}

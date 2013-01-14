@@ -9,9 +9,6 @@
 #define DIT_LENGTH 200
 
 
-#define BSP_morse_signal BSP_LED
-
-
 /**
  * @brief Holds a set of characters and their Morse Code representations.
  *
