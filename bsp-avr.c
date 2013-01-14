@@ -1,6 +1,5 @@
 #include "bsp.h"
 #include "rdoorbell0.h"
-#include "cpu-speed.h"
 #include "morse.h"
 
 #include <avr/wdt.h>
