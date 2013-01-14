@@ -6,6 +6,9 @@
 #include <avr/wdt.h>
 
 
+Q_DEFINE_THIS_FILE;
+
+
 #define SB(port,bit) port |= (1 << bit)
 #define CB(port,bit) port &= ~ (1 << bit)
 
@@ -50,7 +53,7 @@ void BSP_button(struct RDoorbell0 *me)
 			bstate ++;
 			break;
 		case 1:
-			QActive_post((QActive*)me, BUTTON_SIGNAL);
+			post((QActive*)me, BUTTON_SIGNAL);
 			bstate ++;
 			break;
 		default:
@@ -123,7 +126,7 @@ void BSP_buzzer(uint8_t onoff)
 
 SIGNAL(WDT_vect)
 {
-	QActive_postISR((QActive*)(&rdoorbell0), WATCHDOG_SIGNAL);
+	postISR((QActive*)(&rdoorbell0), WATCHDOG_SIGNAL);
 	QF_tick();
 }
 
