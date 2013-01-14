@@ -1,6 +1,7 @@
 #include "bsp.h"
 #include "rdoorbell0.h"
 #include "cpu-speed.h"
+#include "morse.h"
 
 #include <avr/wdt.h>
 
@@ -24,7 +25,7 @@ void QF_onIdle(void)
 
 void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line)
 {
-
+	morse_assert(file, line);
 }
 
 
