@@ -1,4 +1,7 @@
 From: Russell Steicke <russells@adelie.cx>
 Subject: Flash the LED in Morse code on assertions.
 
+We also use some macros when posting events so when an event post
+generates an assertion, we can tell exactly where it was generated.
+
 Signed-off-by: Russell Steicke <russells@adelie.cx>
