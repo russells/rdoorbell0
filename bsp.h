@@ -49,4 +49,15 @@ void BSP_alarm(uint8_t onoff);
 void BSP_power(uint8_t onoff);
 void BSP_buzzer(uint8_t onoff);
 
+void BSP_stop_everything(void);
+void BSP_enable_morse_line(void);
+void BSP_morse_signal(uint8_t onoff);
+
+#ifdef __AVR
+#include "cpu-speed.h"
+#include <util/delay.h>
+#define BSP_delay_ms(ms) _delay_ms(ms)
+#endif
+
+
 #endif	/* bsp_h_INCLUDED */
