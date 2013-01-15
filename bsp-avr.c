@@ -40,7 +40,7 @@ void BSP_watchdog(struct RDoorbell0 *me)
 
 /**
  * Check to see if the button is down.  If it appears to be down twice in a row
- * (and only twice) send a button signal.
+ * send a button signal.
  */
 void BSP_button(struct RDoorbell0 *me)
 {
@@ -52,13 +52,17 @@ void BSP_button(struct RDoorbell0 *me)
 			bstate ++;
 			break;
 		case 1:
-			post((QActive*)me, BUTTON_SIGNAL);
+			post((QActive*)me, BUTTON_PRESS_SIGNAL);
 			bstate ++;
 			break;
 		default:
+			post((QActive*)me, BUTTON_PRESS_SIGNAL);
 			break;
 		}
 	} else {
+		if (bstate > 1) {
+			post((QActive*)me, BUTTON_RELEASE_SIGNAL);
+		}
 		bstate = 0;
 	}
 }

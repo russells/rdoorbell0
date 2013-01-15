@@ -15,7 +15,8 @@ enum RDoorbell0Signals {
 	/**
 	 * Sent when the button is pressed.
 	 */
-	BUTTON_SIGNAL,
+	BUTTON_PRESS_SIGNAL,
+	BUTTON_RELEASE_SIGNAL,
 	MAX_PUB_SIG,
 	MAX_SIG,
 };

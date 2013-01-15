@@ -81,7 +81,7 @@ static QState waitingState(struct RDoorbell0 *me)
 	case Q_ENTRY_SIG:
 		BSP_LED(1);
 		return Q_HANDLED();
-	case BUTTON_SIGNAL:
+	case BUTTON_PRESS_SIGNAL:
 		return Q_TRAN(ringState);
 	case Q_EXIT_SIG:
 		BSP_LED(0);
@@ -98,7 +98,7 @@ static QState ringState(struct RDoorbell0 *me)
 		QActive_arm((QActive*)me, 2);
 		BSP_alarm(1);
 		return Q_HANDLED();
-	case BUTTON_SIGNAL:
+	case BUTTON_PRESS_SIGNAL:
 		/* Button signals could be generated while we are in here.
 		   That would result in a transition here if handled by the top
 		   state, which will mean we exit and re-enter, and so call
@@ -121,7 +121,7 @@ static QState politePauseState(struct RDoorbell0 *me)
 	case Q_ENTRY_SIG:
 		QActive_arm((QActive*)me, POLITE_PAUSE);
 		return Q_HANDLED();
-	case BUTTON_SIGNAL:
+	case BUTTON_PRESS_SIGNAL:
 		return Q_TRAN(buzzerState);
 	case Q_TIMEOUT_SIG:
 		QActive_disarm((QActive*)me);
@@ -138,7 +138,7 @@ static QState buzzerState(struct RDoorbell0 *me)
 		QActive_arm((QActive*)me, 5);
 		BSP_buzzer(1);
 		return Q_HANDLED();
-	case BUTTON_SIGNAL:
+	case BUTTON_PRESS_SIGNAL:
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
 		return Q_TRAN(politePauseState);
