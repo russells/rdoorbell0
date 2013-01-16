@@ -1,4 +1,34 @@
-A simplified doorbell.
+This is a doorbell that can't be rung continuously.
+
+It has these component:
+
+- External button
+
+- Light on the external button
+
+- External chime/buzzer
+
+- Internal bell
+
+It operates like this:
+
+- While waiting for the button to be pressed, the light on the external
+  button is on.
+
+- When the button is pressed, the internal bell will ring, the external
+  chime will sound, and the light on the external button will go off.
+
+- After the internal bell rings, there is a pause period, during which
+  pressing the button will not ring the internal bell, but sound the
+  external buzzer.
+
+- If the button is pressed during the pause period, the pause period will
+  be restarted.  It will also be made longer, up to a maximum period.
+
+- The light on the external button will remain off until the (possibly
+  restarted and extended) pause period has expired.
+
+- The internal bell can only be rung if the external light is on.
 
 The original project grew like Topsy, and lost sight of its mission.  This one
 is intended to remain simple, and only implement the delayed doorbell.
