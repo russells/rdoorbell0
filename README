@@ -16,10 +16,10 @@ It operates like this:
   button is on.
 
 - When the button is pressed, the internal bell will ring, the external
-  chime will sound, and the light on the external button will go off.
+  chime will sound, and the light on the external button will switch off.
 
 - After the internal bell rings, there is a pause period, during which
-  pressing the button will not ring the internal bell, but sound the
+  pressing the button will not ring the internal bell, but will sound the
   external buzzer.
 
 - If the button is pressed during the pause period, the pause period will
