@@ -30,5 +30,3 @@ It operates like this:
 
 - The internal bell can only be rung if the external light is on.
 
-The original project grew like Topsy, and lost sight of its mission.  This one
-is intended to remain simple, and only implement the delayed doorbell.
