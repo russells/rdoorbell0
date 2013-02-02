@@ -20,6 +20,9 @@ PROGRAMMAPFILE = $(APPNAME).map
 HEXPROGRAM = $(APPNAME).hex
 BINPROGRAM = $(APPNAME).bin
 
+AVR_PROGRAMMER ?= stk500v2
+AVR_PROGRAMMER_PORT ?= /dev/ttyACM0
+
 
 QPN_INCDIR = qp-nano/include
 QP_LIBDIR = $(QP_PRTDIR)/$(BINDIR)
@@ -74,7 +77,7 @@ clean:
 
 .PHONY: flash
 flash: $(HEXPROGRAM)
-	avrdude -P usb -p t85 -c $(AVR_PGOGRAMMER) -U flash:w:$(HEXPROGRAM)
+	avrdude -p t85 -P $(AVR_PROGRAMMER_PORT) -c $(AVR_PROGRAMMER) -U flash:w:$(HEXPROGRAM)
 
 .PHONY: doc
 doc:
