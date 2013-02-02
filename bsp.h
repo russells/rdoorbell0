@@ -45,7 +45,7 @@ void BSP_init(void);
 
 void BSP_button(struct RDoorbell0 *me); /* Check to see if the button is pressed. */
 void BSP_LED(uint8_t onoff);
-void BSP_alarm(uint8_t onoff);
+void BSP_bell(uint8_t onoff);
 void BSP_power(uint8_t onoff);
 void BSP_buzzer(uint8_t onoff);
 
