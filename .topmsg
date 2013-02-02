@@ -1,0 +1,10 @@
+From: Russell Steicke <russells@adelie.cx>
+Subject: Manage the battery.
+
+We monitor the battery voltage, and turn on the charger when required.
+While charging the battery, we monitor the charger's "overcharge"
+status output and switch off when that is activated.
+
+We also unconditionally turn on the charger for a while every day.
+
+Signed-off-by: Russell Steicke <russells@adelie.cx>
