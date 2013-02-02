@@ -21,8 +21,18 @@ void BSP_onStartup(void)
 
 void QF_onIdle(void)
 {
-	/* TODO: sleep */
-	QF_INT_UNLOCK();
+	PRR = 0b00001111;       /* Everything off. */
+	SB(MCUCR, SM1);         /* Power down sleep mode. */
+	CB(MCUCR, SM0);
+	SB(MCUCR, SE);          /* Enable sleep mode. */
+
+	/* Don't separate the following two assembly instructions.  See Atmel's
+	   NOTE03. */
+	__asm__ __volatile__ ("sei" "\n\t" :: );
+	__asm__ __volatile__ ("sleep" "\n\t" :: );
+
+	/* Now we're awake again. */
+	CB(MCUCR, SE);          /* Disable sleep mode. */
 }
 
 void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line)
