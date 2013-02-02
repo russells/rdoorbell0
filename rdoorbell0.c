@@ -96,19 +96,19 @@ static QState ringState(struct RDoorbell0 *me)
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
 		QActive_arm((QActive*)me, 2);
-		BSP_alarm(1);
+		BSP_bell(1);
 		return Q_HANDLED();
 	case BUTTON_PRESS_SIGNAL:
 		/* Button signals could be generated while we are in here.
 		   That would result in a transition here if handled by the top
 		   state, which will mean we exit and re-enter, and so call
-		   BSP_alarm() over and over.  So ignore button signals here to
+		   BSP_bell() over and over.  So ignore button signals here to
 		   prevent that. */
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
 		return Q_TRAN(politePauseState);
 	case Q_EXIT_SIG:
-		BSP_alarm(0);
+		BSP_bell(0);
 		return Q_HANDLED();
 	}
 	return Q_SUPER(rdoorbell0State);

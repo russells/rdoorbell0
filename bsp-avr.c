@@ -90,14 +90,14 @@ void BSP_init(void)
 void BSP_LED(uint8_t onoff)
 {
 	if (onoff) {
-		SB(PORTB, 0);
-	} else {
 		CB(PORTB, 0);
+	} else {
+		SB(PORTB, 0);
 	}
 }
 
 
-void BSP_alarm(uint8_t onoff)
+void BSP_bell(uint8_t onoff)
 {
 	if (onoff) {
 		SB(PORTB, 3);
