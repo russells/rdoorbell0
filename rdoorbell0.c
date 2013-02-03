@@ -4,6 +4,7 @@
  */
 
 #include "rdoorbell0.h"
+#include "battery.h"
 #include "bsp.h"
 
 
@@ -38,6 +39,7 @@ int main(int argc, char **argv)
  startmain:
 	BSP_init(); /* initialize the Board Support Package */
 	rdoorbell0_ctor();
+	battery_ctor(&battery);
 
 	QF_run();
 
