@@ -138,14 +138,14 @@ static QState buzzerState(struct RDoorbell0 *me)
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
 		QActive_arm((QActive*)me, 5);
-		BSP_buzzer(1);
+		BSP_buzzer(1, 1);
 		return Q_HANDLED();
 	case BUTTON_PRESS_SIGNAL:
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
 		return Q_TRAN(politePauseState);
 	case Q_EXIT_SIG:
-		BSP_buzzer(0);
+		BSP_buzzer(0, 0);
 		return Q_HANDLED();
 	}
 	return Q_SUPER(rdoorbell0State);

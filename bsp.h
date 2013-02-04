@@ -47,7 +47,7 @@ void BSP_button(struct RDoorbell0 *me); /* Check to see if the button is pressed
 void BSP_LED(uint8_t onoff);
 void BSP_bell(uint8_t onoff);
 void BSP_power(uint8_t onoff);
-void BSP_buzzer(uint8_t onoff);
+void BSP_buzzer(uint16_t freq, uint8_t volume);
 
 void BSP_stop_everything(void);
 void BSP_enable_morse_line(void);

@@ -33,7 +33,7 @@ static QState offState(struct ExternalBell *me)
 {
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
-		BSP_buzzer(0);
+		BSP_buzzer(0, 0);
 		return Q_HANDLED();
 	default:
 		return Q_SUPER(topState);

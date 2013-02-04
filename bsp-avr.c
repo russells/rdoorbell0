@@ -117,12 +117,32 @@ void BSP_power(uint8_t onoff)
 }
 
 
-void BSP_buzzer(uint8_t onoff)
+/**
+ * Turn on the buzzer, with the given frequency.
+ *
+ * We rely on gcc's -Os option to collapse this function into BSP_buzzer(), and
+ * not actually use another function call.
+ */
+static void buzzer_freq(uint16_t freq, uint8_t volume)
 {
-	if (onoff) {
-		SB(PORTB, 1);
+	uint8_t ocr1c;
+}
+
+
+/**
+ * Turn on the buzzer, with the given frequency and volume.
+ *
+ * @param freq the buzzer frequency.  If 0, the buzzer is turned off.
+ * @param volume can be 1, 2, 4, or 8.  Lower numbers are higher volume.
+ */
+void BSP_buzzer(uint16_t freq, uint8_t volume)
+{
+	Q_ASSERT(volume==1 || volume==2 || volume==4 || volume==8);
+	if (freq) {
+		buzzer_freq(freq, volume);
+		SB(DDRB, 1);	/* Ensure the signal gets out. */
 	} else {
-		CB(PORTB, 1);
+		CB(DDRB, 1);	/* Stop the signal getting out. */
 	}
 }
 
