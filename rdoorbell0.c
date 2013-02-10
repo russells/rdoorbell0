@@ -22,9 +22,11 @@ static QState politePauseState         (struct RDoorbell0 *me);
 
 
 static QEvent rdoorbell0Queue[4];
+static QEvent externalbellQueue[4];
 
 QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
 	{ (QActive *)0              , (QEvent *)0      , 0                        },
+	{ (QActive *)(&externalbell), externalbellQueue, Q_DIM(externalbellQueue) },
 	{ (QActive *)(&rdoorbell0)  , rdoorbell0Queue  , Q_DIM(rdoorbell0Queue)   },
 };
 /* If QF_MAX_ACTIVE is incorrectly defined, the compiler says something like:
