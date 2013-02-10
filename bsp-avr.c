@@ -129,10 +129,34 @@ void BSP_power(uint8_t onoff)
  *
  * We rely on gcc's -Os option to collapse this function into BSP_buzzer(), and
  * not actually use another function call.
+ *
+ * OCR1C determines the frequency (along with the prescaler value, CS13-CS10.
+ *
+ * OCR1A determines the volume.
  */
 static void buzzer_freq(uint16_t freq, uint8_t volume)
 {
-	//uint8_t ocr1c;
+	uint8_t ocr1c;
+	uint8_t cs1;
+
+	CB(DDRB, 0);		/* Input while we set up. */
+	switch (freq) {
+	case external_bell_high:
+		ocr1c = 0;
+		cs1 = 0;
+		break;
+	case external_bell_low:
+		ocr1c = 0;
+		cs1 = 0;
+		break;
+	case external_bell_buzz:
+		ocr1c = 0;
+		cs1 = 0;
+		break;
+	default:
+		Q_ASSERT(0);
+		break;
+	}
 }
 
 

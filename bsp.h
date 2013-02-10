@@ -60,5 +60,11 @@ void BSP_morse_signal(uint8_t onoff);
 #define BSP_delay_ms(ms) _delay_ms(ms)
 #endif
 
+enum external_bell_frequency {
+	external_bell_high = 1000,
+	external_bell_low  = 500,
+	external_bell_buzz = 100,
+};
+
 
 #endif	/* bsp_h_INCLUDED */
