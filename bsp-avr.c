@@ -125,7 +125,7 @@ void BSP_power(uint8_t onoff)
  */
 static void buzzer_freq(uint16_t freq, uint8_t volume)
 {
-	uint8_t ocr1c;
+	//uint8_t ocr1c;
 }
 
 
