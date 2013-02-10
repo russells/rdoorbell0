@@ -142,6 +142,7 @@ static void buzzer_freq(uint16_t freq, uint8_t volume)
 	CB(DDRB, 0);		/* Input while we set up. */
 	switch (freq) {
 	case external_bell_high:
+		/* FIXME calculate the ocr1c and cs1 values. */
 		ocr1c = 0;
 		cs1 = 0;
 		break;
