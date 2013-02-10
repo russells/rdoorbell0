@@ -54,7 +54,7 @@ static QState highState(struct ExternalBell *me)
 {
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
-		BSP_buzzer(1000, 4);
+		BSP_buzzer(external_bell_high, 4);
 		QActive_arm((QActive*)me, 10);
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
@@ -71,7 +71,7 @@ static QState lowState(struct ExternalBell *me)
 {
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
-		BSP_buzzer(750, 4);
+		BSP_buzzer(external_bell_low, 4);
 		QActive_arm((QActive*)me, 10);
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
@@ -88,7 +88,7 @@ static QState buzzerState(struct ExternalBell *me)
 {
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
-		BSP_buzzer(100, 8);
+		BSP_buzzer(external_bell_buzz, 8);
 		QActive_arm((QActive*)me, 7);
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
