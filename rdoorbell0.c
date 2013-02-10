@@ -19,7 +19,6 @@ static QState rdoorbell0State          (struct RDoorbell0 *me);
 static QState waitingState             (struct RDoorbell0 *me);
 static QState ringState                (struct RDoorbell0 *me);
 static QState politePauseState         (struct RDoorbell0 *me);
-static QState buzzerState              (struct RDoorbell0 *me);
 
 
 static QEvent rdoorbell0Queue[4];
@@ -125,29 +124,12 @@ static QState politePauseState(struct RDoorbell0 *me)
 		QActive_arm((QActive*)me, POLITE_PAUSE);
 		return Q_HANDLED();
 	case BUTTON_PRESS_SIGNAL:
-		return Q_TRAN(buzzerState);
+		QActive_arm((QActive*)me, POLITE_PAUSE);
+		post(&externalbell, EXTERNAL_BUZZER_SIGNAL);
+		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
 		QActive_disarm((QActive*)me);
 		return Q_TRAN(waitingState);
-	}
-	return Q_SUPER(rdoorbell0State);
-}
-
-
-static QState buzzerState(struct RDoorbell0 *me)
-{
-	switch (Q_SIG(me)) {
-	case Q_ENTRY_SIG:
-		QActive_arm((QActive*)me, 5);
-		BSP_buzzer(1, 1);
-		return Q_HANDLED();
-	case BUTTON_PRESS_SIGNAL:
-		return Q_HANDLED();
-	case Q_TIMEOUT_SIG:
-		return Q_TRAN(politePauseState);
-	case Q_EXIT_SIG:
-		BSP_buzzer(0, 0);
-		return Q_HANDLED();
 	}
 	return Q_SUPER(rdoorbell0State);
 }
