@@ -11,6 +11,6 @@ struct ExternalBell {
 
 extern struct ExternalBell externalbell;
 
-void externalbell_ctor(struct ExternalBell *externalbell);
+void externalbell_ctor(void);
 
 #endif // external_bell_h_INCLUDED

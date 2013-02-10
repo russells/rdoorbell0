@@ -38,6 +38,7 @@
 #define BSP_logmsg(f,...)
 #define BSP_print_event(me,name,e)
 
+void BSP_startMain(void);
 void BSP_watchdog(struct RDoorbell0 *me);
 void BSP_onStartup();		/* Called from QF_onStartup(), just before the
 				   event loop starts. */

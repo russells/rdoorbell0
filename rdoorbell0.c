@@ -37,13 +37,18 @@ Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 int main(int argc, char **argv)
 {
+	static uint8_t counter = 0;
+
+	BSP_startMain();
+	Q_ASSERT(0 == counter);
  startmain:
 	BSP_init(); /* initialize the Board Support Package */
 	rdoorbell0_ctor();
-	externalbell_ctor(&externalbell);
+	externalbell_ctor();
 
 	QF_run();
 
+	counter++;
 	goto startmain;
 }
 

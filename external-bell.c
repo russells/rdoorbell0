@@ -2,6 +2,9 @@
 #include "bsp.h"
 
 
+Q_DEFINE_THIS_FILE;
+
+
 struct ExternalBell externalbell;
 
 
@@ -13,7 +16,7 @@ static QState lowState(struct ExternalBell *me);
 static QState buzzerState(struct ExternalBell *me);
 
 
-void externalbell_ctor(struct ExternalBell *externalbell)
+void externalbell_ctor(void)
 {
 	QActive_ctor((QActive *)(&externalbell),
 		     (QStateHandler)&initialState);
@@ -51,7 +54,7 @@ static QState highState(struct ExternalBell *me)
 {
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
-		BSP_buzzer(1000, 100);
+		BSP_buzzer(1000, 4);
 		QActive_arm((QActive*)me, 10);
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
@@ -68,7 +71,7 @@ static QState lowState(struct ExternalBell *me)
 {
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
-		BSP_buzzer(750, 100);
+		BSP_buzzer(750, 4);
 		QActive_arm((QActive*)me, 10);
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
@@ -85,7 +88,7 @@ static QState buzzerState(struct ExternalBell *me)
 {
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
-		BSP_buzzer(100, 200);
+		BSP_buzzer(100, 8);
 		QActive_arm((QActive*)me, 7);
 		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:

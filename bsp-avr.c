@@ -12,6 +12,13 @@ Q_DEFINE_THIS_FILE;
 #define CB(port,bit) port &= ~ (1 << bit)
 
 
+void BSP_startMain(void)
+{
+	wdt_reset();
+	wdt_disable();
+}
+
+
 void BSP_onStartup(void)
 {
 	/* Must match BSP_TICKS_PER_SECOND */
@@ -137,8 +144,8 @@ static void buzzer_freq(uint16_t freq, uint8_t volume)
  */
 void BSP_buzzer(uint16_t freq, uint8_t volume)
 {
-	Q_ASSERT(volume==1 || volume==2 || volume==4 || volume==8);
 	if (freq) {
+		Q_ASSERT(volume==1 || volume==2 || volume==4 || volume==8);
 		buzzer_freq(freq, volume);
 		SB(DDRB, 1);	/* Ensure the signal gets out. */
 	} else {
