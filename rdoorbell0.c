@@ -98,6 +98,7 @@ static QState ringState(struct RDoorbell0 *me)
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
 		QActive_arm((QActive*)me, 2);
+		post(&externalbell, EXTERNAL_BELL_SIGNAL);
 		BSP_bell(1);
 		return Q_HANDLED();
 	case BUTTON_PRESS_SIGNAL:
