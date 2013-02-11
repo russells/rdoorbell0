@@ -17,6 +17,8 @@ enum RDoorbell0Signals {
 	 */
 	BUTTON_PRESS_SIGNAL,
 	BUTTON_RELEASE_SIGNAL,
+	EXTERNAL_BELL_SIGNAL,
+	EXTERNAL_BUZZER_SIGNAL,
 	MAX_PUB_SIG,
 	MAX_SIG,
 };
@@ -48,7 +50,7 @@ extern struct RDoorbell0 rdoorbell0;
 
 
 /** Normal alarm wait period. */
-#define POLITE_PAUSE (15 * BSP_TICKS_PER_SECOND)
+#define POLITE_PAUSE (45 * BSP_TICKS_PER_SECOND)
 
 
 /**

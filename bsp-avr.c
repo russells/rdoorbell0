@@ -12,6 +12,13 @@ Q_DEFINE_THIS_FILE;
 #define CB(port,bit) port &= ~ (1 << bit)
 
 
+void BSP_startMain(void)
+{
+	wdt_reset();
+	wdt_disable();
+}
+
+
 void BSP_onStartup(void)
 {
 	/* Must match BSP_TICKS_PER_SECOND */
@@ -117,12 +124,108 @@ void BSP_power(uint8_t onoff)
 }
 
 
-void BSP_buzzer(uint8_t onoff)
+/**
+ * Turn on the buzzer, with the given frequency.
+ *
+ * We rely on gcc's -Os option to collapse this function into BSP_buzzer(), and
+ * not actually use another function call.
+ *
+ * OCR1C determines the frequency (along with the prescaler value, CS1[3:0].
+ *
+ * fOCnx = fClkIO / (2 * N * (1 + OCRnx))  // doc2586.pdf, p75.
+ * OCRnx = (fClkIO / (2 * N * fOCnx)) - 1  // N is prescaler divisor
+ * fClkIO is 1MHz (default clock source, internal RC clock with CLKDIV8 fuse
+ * programmed)
+ *
+ * For 1000Hz, N=4,   CS1[3:0]=0011, OCR1C=249.
+ * For 500Hz,  N=8,   CS1[3:0]=0100, OCR1C=249.
+ * For 100Hz,  N=32,  CS1[3:0]=0110, OCR1C=155.
+ * For 50Hz,   N=64,  CS1[3:0]=0111, OCR1C=155.
+ * For 25Hz,   N=128, CS1[3:0]=1000, OCR1C=155.
+ *
+ * OCR1A determines the volume.
+ */
+static void buzzer_freq(enum external_bell_frequency freq, uint8_t volume)
 {
-	if (onoff) {
-		SB(PORTB, 1);
+	uint8_t ocr1c;
+	uint8_t ocr1a = 10;	/* Defeat the compiler! */
+	uint8_t cs1;
+	uint8_t tccr1;
+
+	CB(DDRB, 1);		/* Input while we set up. */
+	/* Set up TCCR1 every time.  Does no harm. */
+	TCCR1 = (0 << CTC1) |
+		(1 << PWM1A) |	/* PWM mode */
+		(1 << COM1A1) |	/* OC1A cleared on compare match, /OC1A NC. */
+		(0 << COM1A0);	/* CS[3:0] = 0000 */
+	switch (freq) {
+	case external_bell_high:
+		ocr1c = 249;
+		cs1 = 0b0011;
+		break;
+	case external_bell_low:
+		ocr1c = 249;
+		cs1 = 0b0100;
+		break;
+	case external_bell_buzz:
+		ocr1c = 155;
+		cs1 = 0b0110;
+		break;
+	default:
+		Q_ASSERT(0);
+		break;
+	}
+
+	switch (freq) {
+	case external_bell_high:
+	case external_bell_low:
+		switch (volume) {
+		case 1: ocr1a = 15; break;
+		case 2: ocr1a = 31; break;
+		case 4: ocr1a = 62; break;
+		case 8: ocr1a = 125; break;
+		default: Q_ASSERT(0);
+		}
+		break;
+	case external_bell_buzz:
+		switch (volume) {
+		case 1: ocr1a = 9; break;
+		case 2: ocr1a = 19; break;
+		case 4: ocr1a = 38; break;
+		case 8: ocr1a = 77; break;
+		default: Q_ASSERT(0);
+		}
+		break;
+	}
+
+	OCR1C = ocr1c;
+	OCR1A = ocr1a;
+	tccr1 = TCCR1;
+	tccr1 &= 0xf0;
+	tccr1 |= cs1;
+	TCCR1 = tccr1;
+	GTCCR = 0;		/* OC1B off, etc. */
+	SB(DDRB, 1);		/* Output again. */
+}
+
+
+/**
+ * Turn on the buzzer, with the given frequency and volume.
+ *
+ * @param freq the buzzer frequency.  The frequency is really just an
+ * indicator, selected from enum external_bell_frequency.  If 0, the buzzer is
+ * turned off.
+ *
+ * @param volume can be 1, 2, 4, or 8.  Lower numbers are higher volume.
+ */
+void BSP_buzzer(enum external_bell_frequency freq, uint8_t volume)
+{
+	if (freq) {
+		Q_ASSERT(volume==1 || volume==2 || volume==4 || volume==8);
+		buzzer_freq(freq, volume);
+		SB(DDRB, 1);	/* Ensure the signal gets out. */
 	} else {
-		CB(PORTB, 1);
+		CB(DDRB, 1);	/* Stop the signal getting out. */
 	}
 }
 

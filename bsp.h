@@ -28,6 +28,17 @@
 #ifndef bsp_h_INCLUDED
 #define bsp_h_INCLUDED
 
+/**
+ * Specify the external bell frequency.  These are the first guesses, but the
+ * numbers here don't matter that much.  The values used in the BSP timer code
+ * are important.
+ */
+enum external_bell_frequency {
+	external_bell_high = 1000,
+	external_bell_low  = 500,
+	external_bell_buzz = 100,
+};
+
 #include "rdoorbell0.h"
 
 #ifdef __AVR
@@ -38,6 +49,7 @@
 #define BSP_logmsg(f,...)
 #define BSP_print_event(me,name,e)
 
+void BSP_startMain(void);
 void BSP_watchdog(struct RDoorbell0 *me);
 void BSP_onStartup();		/* Called from QF_onStartup(), just before the
 				   event loop starts. */
@@ -47,7 +59,7 @@ void BSP_button(struct RDoorbell0 *me); /* Check to see if the button is pressed
 void BSP_LED(uint8_t onoff);
 void BSP_bell(uint8_t onoff);
 void BSP_power(uint8_t onoff);
-void BSP_buzzer(uint8_t onoff);
+void BSP_buzzer(enum external_bell_frequency freq, uint8_t volume);
 
 void BSP_stop_everything(void);
 void BSP_enable_morse_line(void);

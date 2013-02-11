@@ -4,6 +4,7 @@
  */
 
 #include "rdoorbell0.h"
+#include "external-bell.h"
 #include "bsp.h"
 
 
@@ -18,13 +19,14 @@ static QState rdoorbell0State          (struct RDoorbell0 *me);
 static QState waitingState             (struct RDoorbell0 *me);
 static QState ringState                (struct RDoorbell0 *me);
 static QState politePauseState         (struct RDoorbell0 *me);
-static QState buzzerState              (struct RDoorbell0 *me);
 
 
 static QEvent rdoorbell0Queue[4];
+static QEvent externalbellQueue[4];
 
 QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
 	{ (QActive *)0              , (QEvent *)0      , 0                        },
+	{ (QActive *)(&externalbell), externalbellQueue, Q_DIM(externalbellQueue) },
 	{ (QActive *)(&rdoorbell0)  , rdoorbell0Queue  , Q_DIM(rdoorbell0Queue)   },
 };
 /* If QF_MAX_ACTIVE is incorrectly defined, the compiler says something like:
@@ -35,12 +37,18 @@ Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 int main(int argc, char **argv)
 {
+	static uint8_t counter = 0;
+
+	BSP_startMain();
+	Q_ASSERT(0 == counter);
  startmain:
 	BSP_init(); /* initialize the Board Support Package */
 	rdoorbell0_ctor();
+	externalbell_ctor();
 
 	QF_run();
 
+	counter++;
 	goto startmain;
 }
 
@@ -96,6 +104,7 @@ static QState ringState(struct RDoorbell0 *me)
 	switch (Q_SIG(me)) {
 	case Q_ENTRY_SIG:
 		QActive_arm((QActive*)me, 2);
+		post(&externalbell, EXTERNAL_BELL_SIGNAL);
 		BSP_bell(1);
 		return Q_HANDLED();
 	case BUTTON_PRESS_SIGNAL:
@@ -122,29 +131,12 @@ static QState politePauseState(struct RDoorbell0 *me)
 		QActive_arm((QActive*)me, POLITE_PAUSE);
 		return Q_HANDLED();
 	case BUTTON_PRESS_SIGNAL:
-		return Q_TRAN(buzzerState);
+		QActive_arm((QActive*)me, POLITE_PAUSE);
+		post(&externalbell, EXTERNAL_BUZZER_SIGNAL);
+		return Q_HANDLED();
 	case Q_TIMEOUT_SIG:
 		QActive_disarm((QActive*)me);
 		return Q_TRAN(waitingState);
-	}
-	return Q_SUPER(rdoorbell0State);
-}
-
-
-static QState buzzerState(struct RDoorbell0 *me)
-{
-	switch (Q_SIG(me)) {
-	case Q_ENTRY_SIG:
-		QActive_arm((QActive*)me, 5);
-		BSP_buzzer(1);
-		return Q_HANDLED();
-	case BUTTON_PRESS_SIGNAL:
-		return Q_HANDLED();
-	case Q_TIMEOUT_SIG:
-		return Q_TRAN(politePauseState);
-	case Q_EXIT_SIG:
-		BSP_buzzer(0);
-		return Q_HANDLED();
 	}
 	return Q_SUPER(rdoorbell0State);
 }

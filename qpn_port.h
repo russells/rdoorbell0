@@ -38,8 +38,8 @@
 #define QF_TIMEEVT_CTR_SIZE     2 /* 16 bit time counter for doorbell. */
 
 /* maximum # active objects--must match EXACTLY the QF_active[] definition  */
-#define QF_MAX_ACTIVE           1 /* The doorbell has these active objects:
-				     rdoorbell0. */
+#define QF_MAX_ACTIVE           2 /* The doorbell has these active objects:
+				     rdoorbell0, externalbell. */
 
                                /* interrupt locking policy for IAR compiler */
 #define QF_INT_LOCK()           cli()
